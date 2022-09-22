@@ -11,16 +11,23 @@ import java.util.List;
 
 public class SpecializationDAO implements ISpecializationDAO {
     private final Logger logger = LogManager.getLogger(SpecializationDAO.class.getName());
-
+    private static final String INSERT = "INSERT INTO specializations(name) VALUES(?)";
     @Override
     public void create(Specialization model) {
-        try {
-            Connection cn = ConnectionSettings.getConnection();
-            PreparedStatement ps = cn.prepareStatement("INSERT INTO specializations(name) VALUES(?)");
+        Connection cn = ConnectionSettings.getConnection();
+        PreparedStatement ps = null;
+        try{
+            ps = cn.prepareStatement(INSERT);
             ps.setString(1, model.getName());
-            logger.info(ps.executeUpdate());
+            int rows = ps.executeUpdate();
+
+            if(rows > 0)
+                System.out.println("Succsess!");
         } catch (SQLException e) {
             logger.error(e.getMessage());
+        }finally {
+            ConnectionSettings.close(cn);
+            ConnectionSettings.close(ps);
         }
     }
 
@@ -37,14 +44,6 @@ public class SpecializationDAO implements ISpecializationDAO {
 
     @Override
     public Specialization get(int id) {
-        Connection cn = ConnectionSettings.getConnection();
-        try {
-            Statement statement = cn.createStatement();
-            ResultSet resultSet = statement.executeQuery("SELECT * FROM specializations WHERE id=" + id);
-            logger.info(resultSet);
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
         return null;
     }
 
