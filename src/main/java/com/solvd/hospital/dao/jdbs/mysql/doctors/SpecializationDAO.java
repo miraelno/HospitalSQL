@@ -22,7 +22,7 @@ public class SpecializationDAO implements ISpecializationDAO {
             int rows = ps.executeUpdate();
 
             if(rows > 0)
-                System.out.println("Succsess!");
+                System.out.println("Success!");
         } catch (SQLException e) {
             logger.error(e.getMessage());
         }finally {
